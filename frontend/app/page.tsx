@@ -40,7 +40,7 @@ export default function Home() {
         await tasksApi.execute(() => getTasks(searchQuery, statusFilter, priorityFilter, datePresetFilter, sortBy, sortOrder));
         // Load available tags
         try {
-          const tags = await apiRequest<Array<{name: string}>>('/api/tags');
+          const tags = await apiRequest<Array<{ name: string }>>('/api/tags');
           setAvailableTags(tags.map(t => t.name));
         } catch (error) {
           console.error('Failed to load tags:', error);
@@ -75,7 +75,7 @@ export default function Home() {
 
       // Refresh available tags
       try {
-        const tags = await apiRequest<Array<{name: string}>>('/api/tags');
+        const tags = await apiRequest<Array<{ name: string }>>('/api/tags');
         setAvailableTags(tags.map(t => t.name));
       } catch (error) {
         console.error('Failed to refresh tags:', error);
@@ -105,10 +105,10 @@ export default function Home() {
   // Show loading state while checking session
   if (isPending) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 font-sans">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-600">Checking authentication...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500 mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading your workspace...</p>
         </div>
       </div>
     );
@@ -118,41 +118,36 @@ export default function Home() {
   if (!session) {
     return (
       <ErrorBoundary>
-        <div className="flex min-h-screen bg-zinc-50 font-sans">
-          <main className="flex-1 max-w-3xl mx-auto py-8 px-4 sm:px-6">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-800">My Tasks</h1>
-                <div className="flex gap-2">
-                  <Link
-                    href="/login"
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                </div>
-              </div>
+        <div className="flex min-h-screen items-center justify-center p-4 relative overflow-hidden">
+          {/* Decorative Background Elements */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary-300/20 blur-3xl"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary-300/20 blur-3xl"></div>
+          </div>
 
-              <div className="text-center py-12">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Welcome to Your Todo App</h2>
-                <p className="text-gray-600 mb-6">Please sign in to access your tasks and manage your to-do list.</p>
-                <div className="space-y-4">
-                  <Link
-                    href="/login"
-                    className="block w-full max-w-xs mx-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    Sign In to Continue
-                  </Link>
-                  <p className="text-gray-500 text-sm">
-                    Don't have an account?
-                    <button
-                      onClick={() => window.location.href = '/login'}
-                      className="text-indigo-600 hover:text-indigo-800 ml-1 underline"
-                    >
-                      Sign up here
-                    </button>
-                  </p>
-                </div>
+          <main className="w-full max-w-4xl mx-auto">
+            <div className="glass-panel p-8 sm:p-12 text-center">
+              <h1 className="text-4xl sm:text-5xl font-bold text-gradient mb-6">
+                Master Your Day
+              </h1>
+              <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Experience productivity like never before with our luxury task management suite.
+                Organize, prioritize, and achieve your goals in a serene, sea-inspired environment.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link
+                  href="/login"
+                  className="btn-luxury min-w-[200px] text-lg"
+                >
+                  Start Your Journey
+                </Link>
+                <Link
+                  href="/login"
+                  className="px-8 py-3 rounded-xl border-2 border-primary-200 text-primary-700 font-semibold hover:bg-primary-50 transition-colors min-w-[200px]"
+                >
+                  Sign In
+                </Link>
               </div>
             </div>
           </main>
@@ -163,92 +158,84 @@ export default function Home() {
 
   return (
     <ErrorBoundary>
-      <div className="flex min-h-screen bg-zinc-50 font-sans ">
-        <main className="flex-1 max-w-3xl mx-auto py-8 px-4 sm:px-6">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-800 ">My Tasks</h1>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">
-                  Welcome, {session.user?.email || session.user?.name || 'User'}
-                </span>
-                <button
-                  onClick={async () => {
-                    await signOut();
-                    // Redirect to login page after signing out
-                    window.location.href = '/login';
-                  }}
-                  className="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
-                >
-                  Sign Out
-                </button>
-              </div>
+      <div className="min-h-screen pb-12 font-sans">
+        {/* Navbar / Header */}
+        <header className="glass-panel sticky top-4 mx-4 mb-8 z-10 px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+              T
             </div>
+            <h1 className="text-2xl font-bold text-gray-800 tracking-tight">My Tasks</h1>
+          </div>
 
-            {/* Display errors from the API hooks */}
-            {tasksApi.error && (
-              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-                Failed to load tasks: {tasksApi.error.message}. Please refresh the page.
-              </div>
-            )}
-
-            {createApi.error && (
-              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-                Failed to create task: {createApi.error.message}. Please try again.
-              </div>
-            )}
-
-            {/* Search Bar */}
-            <div className="mb-4">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="Search tasks by title or tags..."
-              />
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:block text-right">
+              <p className="text-sm font-medium text-gray-900">
+                {session.user?.name || 'User'}
+              </p>
+              <p className="text-xs text-gray-500">
+                {session.user?.email}
+              </p>
             </div>
+            <button
+              onClick={async () => {
+                await signOut();
+                window.location.href = '/login';
+              }}
+              className="px-4 py-2 text-sm font-medium text-gray-600 bg-white/50 hover:bg-white/80 hover:text-error-600 rounded-lg transition-all border border-transparent hover:border-error-200"
+            >
+              Sign Out
+            </button>
+          </div>
+        </header>
 
-            {/* Filter Panel */}
-            <div className="mb-4">
-              <FilterPanel
-                status={statusFilter}
-                priority={priorityFilter}
-                datePreset={datePresetFilter}
-                onStatusChange={setStatusFilter}
-                onPriorityChange={setPriorityFilter}
-                onDatePresetChange={setDatePresetFilter}
-              />
+        <main className="max-w-5xl mx-auto px-4 sm:px-6">
+          {/* Display errors from the API hooks */}
+          {tasksApi.error && (
+            <div className="mb-6 p-4 bg-error-50 border border-error-100 text-error-700 rounded-xl shadow-sm">
+              Failed to load tasks: {tasksApi.error.message}. Please refresh the page.
             </div>
+          )}
 
-            {/* Add Task Form */}
-            <form onSubmit={handleCreateTask} className="mb-6">
-              <div className="flex flex-col gap-4">
-                <div className="flex gap-2">
+          {createApi.error && (
+            <div className="mb-6 p-4 bg-error-50 border border-error-100 text-error-700 rounded-xl shadow-sm">
+              Failed to create task: {createApi.error.message}. Please try again.
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Sidebar / Controls */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Add Task Panel */}
+              <div className="glass-panel p-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  New Task
+                </h2>
+                <form onSubmit={handleCreateTask} className="space-y-4">
                   <input
                     type="text"
                     value={newTaskTitle}
                     onChange={(e) => setNewTaskTitle(e.target.value)}
-                    placeholder="Enter a new task..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="What needs to be done?"
+                    className="input-luxury"
                     aria-label="New task title"
                     disabled={createApi.loading}
                   />
-                  <button
-                    type="submit"
-                    className={`px-4 py-2 text-white rounded-lg transition-colors ${createApi.loading ? 'bg-blue-400' : 'bg-blue-500 hover:bg-blue-600'}`}
-                    disabled={createApi.loading}
-                  >
-                    {createApi.loading ? 'Adding...' : 'Add Task'}
-                  </button>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-48">
+
+                  <div className="space-y-3">
+                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wider ml-1">Priority</label>
                     <PrioritySelector
                       value={newTaskPriority}
                       onChange={setNewTaskPriority}
                       disabled={createApi.loading}
                     />
                   </div>
-                  <div className="flex-1">
+
+                  <div className="space-y-3">
+                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wider ml-1">Tags</label>
                     <TagInput
                       value={newTaskTags}
                       onChange={setNewTaskTags}
@@ -256,41 +243,88 @@ export default function Home() {
                       disabled={createApi.loading}
                     />
                   </div>
-                </div>
-              </div>
-            </form>
 
-            {/* Sort Controls */}
-            <div className="mb-4 flex justify-end">
-              <SortControls
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                onSortByChange={setSortBy}
-                onSortOrderChange={setSortOrder}
-              />
+                  <button
+                    type="submit"
+                    className={`btn-luxury w-full mt-2 flex justify-center items-center ${createApi.loading ? 'opacity-70' : ''}`}
+                    disabled={createApi.loading}
+                  >
+                    {createApi.loading ? 'Adding...' : 'Add Task'}
+                  </button>
+                </form>
+              </div>
+
+              {/* Filters Panel */}
+              <div className="glass-panel p-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  Filters
+                </h2>
+                <FilterPanel
+                  status={statusFilter}
+                  priority={priorityFilter}
+                  datePreset={datePresetFilter}
+                  onStatusChange={setStatusFilter}
+                  onPriorityChange={setPriorityFilter}
+                  onDatePresetChange={setDatePresetFilter}
+                />
+              </div>
             </div>
 
-            {/* Tasks List */}
-            <div className="space-y-3">
-              {tasksApi.loading ? (
-                // Show skeleton loading states during initial load
-                Array.from({ length: 5 }).map((_, index) => (
-                  <TaskSkeleton key={`skeleton-${index}`} />
-                ))
-              ) : tasks.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <p>No tasks yet. Add a new task to get started!</p>
-                </div>
-              ) : (
-                tasks.map((task) => (
-                  <TaskItem
-                    key={task.id}
-                    task={task}
-                    onTaskUpdated={handleTaskUpdated}
-                    onTaskDeleted={handleTaskDeleted}
+            {/* Main Content / List */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Search & Sort */}
+              <div className="glass-panel p-4 flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <div className="w-full sm:w-2/3">
+                  <SearchBar
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    placeholder="Search tasks..."
                   />
-                ))
-              )}
+                </div>
+                <div className="w-full sm:w-auto">
+                  <SortControls
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                    onSortByChange={setSortBy}
+                    onSortOrderChange={setSortOrder}
+                  />
+                </div>
+              </div>
+
+              {/* Tasks List */}
+              <div className="space-y-4">
+                {tasksApi.loading ? (
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <TaskSkeleton key={`skeleton-${index}`} />
+                  ))
+                ) : tasks.length === 0 ? (
+                  <div className="glass-panel p-12 text-center">
+                    <div className="w-20 h-20 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-medium text-gray-800 mb-2">No tasks found</h3>
+                    <p className="text-gray-500">
+                      {searchQuery || statusFilter !== 'all'
+                        ? "Try adjusting your filters or search query"
+                        : "Create a new task to get started on your journey"}
+                    </p>
+                  </div>
+                ) : (
+                  tasks.map((task) => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      onTaskUpdated={handleTaskUpdated}
+                      onTaskDeleted={handleTaskDeleted}
+                    />
+                  ))
+                )}
+              </div>
             </div>
           </div>
         </main>

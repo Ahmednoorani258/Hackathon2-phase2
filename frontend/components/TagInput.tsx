@@ -55,56 +55,51 @@ export function TagInput({ value, onChange, availableTags = [], disabled = false
   };
 
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor="tags" className="text-sm font-medium text-gray-700">
-        Tags
-      </label>
-      <div className="relative">
-        <div className="flex flex-wrap gap-1 p-2 border border-gray-300 rounded-md min-h-[42px] bg-white">
-          {value.map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-sm font-medium bg-blue-100 text-blue-800 border border-blue-300"
+    <div className="relative">
+      <div className={`input-luxury flex flex-wrap gap-2 min-h-[48px] items-center ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}>
+        {value.map((tag) => (
+          <span
+            key={tag}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-primary-100 to-secondary-100 text-primary-800 border border-primary-200 shadow-sm"
+          >
+            {tag}
+            <button
+              type="button"
+              onClick={() => removeTag(tag)}
+              disabled={disabled}
+              className="hover:text-error-600 disabled:opacity-50 transition-colors ml-1"
+              aria-label={`Remove ${tag} tag`}
             >
-              {tag}
-              <button
-                type="button"
-                onClick={() => removeTag(tag)}
-                disabled={disabled}
-                className="hover:text-blue-900 disabled:opacity-50"
-                aria-label={`Remove ${tag} tag`}
-              >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </span>
-          ))}
-          <input
-            type="text"
-            id="tags"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={disabled}
-            placeholder="Add tags..."
-            className="flex-1 min-w-[120px] outline-none disabled:bg-gray-100"
-          />
-        </div>
-        {suggestions.length > 0 && (
-          <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-40 overflow-y-auto">
-            {suggestions.map((suggestion) => (
-              <li
-                key={suggestion}
-                onClick={() => addTag(suggestion)}
-                className="px-3 py-2 hover:bg-blue-50 cursor-pointer"
-              >
-                {suggestion}
-              </li>
-            ))}
-          </ul>
-        )}
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </span>
+        ))}
+        <input
+          type="text"
+          id="tags"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          placeholder={value.length === 0 ? "Add tags..." : ""}
+          className="flex-1 min-w-[100px] outline-none bg-transparent text-sm placeholder-gray-400"
+        />
       </div>
+      {suggestions.length > 0 && (
+        <ul className="absolute z-20 w-full mt-2 bg-white/90 backdrop-blur-md border border-gray-100 rounded-xl shadow-xl max-h-40 overflow-y-auto overflow-hidden">
+          {suggestions.map((suggestion) => (
+            <li
+              key={suggestion}
+              onClick={() => addTag(suggestion)}
+              className="px-4 py-2.5 hover:bg-primary-50 cursor-pointer text-sm text-gray-700 hover:text-primary-700 transition-colors"
+            >
+              {suggestion}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

@@ -14,21 +14,23 @@ interface PrioritySelectorProps {
 
 export function PrioritySelector({ value, onChange, disabled = false }: PrioritySelectorProps) {
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor="priority" className="text-sm font-medium text-gray-700">
-        Priority
-      </label>
+    <div className="relative">
       <select
         id="priority"
         value={value}
         onChange={(e) => onChange(e.target.value as "high" | "medium" | "low")}
         disabled={disabled}
-        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+        className="input-luxury appearance-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
+        <option value="high">High Priority</option>
+        <option value="medium">Medium Priority</option>
+        <option value="low">Low Priority</option>
       </select>
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
     </div>
   );
 }
