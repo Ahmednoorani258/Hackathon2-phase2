@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: Todo Phase II Foundation API
+  version: 1.0.0
+  description: API for multi-user Task CRUD with Better Auth JWT integration.
+
+servers:
+  - url: /api/v1
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        is_completed:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - is_completed
+
+    TaskCreate:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Buy milk"
+          default: "Untitled Task"
+
+    TaskUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        is_completed:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+
+security:
+  - bearerAuth: []
+
+paths:
+  /tasks:
+    get:
+      summary: List authenticated user's tasks
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new task (auto-assigned to user)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+
+    put:
+      summary: Update task details or status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '403':
+          description: Forbidden (Ownership mismatch)
+        '404':
+          description: Not Found
+
+    delete:
+      summary: Delete a task
+      responses:
+        '204':
+          description: Deleted
+        '403':
+          description: Forbidden (Ownership mismatch)
+        '404':
+          description: Not Found

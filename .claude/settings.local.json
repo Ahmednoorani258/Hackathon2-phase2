@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(skill-creator)",
+      "Bash(python .claude/skills/spec-validation/scripts/validate_spec.py:*)",
+      "Bash(python:*)",
+      "Bash(git config:*)",
+      "Bash(git fetch:*)",
+      "Bash(powershell:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "WebSearch",
+      "WebFetch(domain:www.better-auth.com)",
+      "Bash(git rev-parse:*)",
+      "Bash(uv init:*)",
+      "Bash(uv add:*)",
+      "Bash(npm install:*)",
+      "Bash(npx create-next-app@latest frontend --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --use-npm --skip-install)",
+      "Bash(mkdir frontend/lib)",
+      "Bash(cat frontend/package.json)",
+      "Bash(pip install -e .)",
+      "Bash(node E:CODINGHackathon2-Phase2validate_success_criteria.js)",
+      "Bash(node validate_success_criteria.js)",
+      "Skill(sp.analyze)",
+      "Skill(context7-efficient)",
+      "Bash(bash scripts/fetch-docs.sh --library \"better-auth\" --topic \"nextjs integration\" --verbose)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(.specify/scripts/powershell/create-new-feature.ps1 -Json \"need to solve authentication issues so write a specs for this that it should use context 7 and browser use skill to fetch updated code and use typescript types so there is no erro and authentication flow should work properly with better-auth and jwt token\" --json --number 1 --short-name \"auth-fix-jwt\")",
+      "Bash(.specify/scripts/bash/create-new-feature.sh --json --number 1 --short-name \"auth-fix-jwt\" --description \"need to solve authentication issues so write a specs for this that it should use context 7 and browser use skill to fetch updated code and use typescript types so there is no erro and authentication flow should work properly with better-auth and jwt token\")",
+      "Bash(bash scripts/fetch-docs.sh --library \"better-auth\" --topic \"nextjs jwt authentication\" --verbose)",
+      "Bash(cmd /c \"dir .claude\\\\skills\\\\better-auth /s\")",
+      "Bash(cmd /c \"dir specs /s\")",
+      "Skill(spec-validation)",
+      "Bash(bash .claude/skills/context7-efficient/scripts/fetch-docs.sh --library \"better-auth\" --topic \"JWT authentication patterns with Next.js 16 and FastAPI backend\" --verbose)",
+      "Bash(cmd /c \"dir .claude\\\\skills /ad\")",
+      "Skill(api-contract-enforcement)",
+      "Bash(pip install passlib[bcrypt] python-jose[dotenv] sqlmodel uvicorn httpx)",
+      "Bash(PYTHONPATH=. python .claude/skills/api-contract-enforcement/scripts/validate_api_contract.py specs/006-foundation-spec/contracts/openapi.yaml backend.main)",
+      "Bash(pip install fastapi uvicorn sqlmodel python-jose[cryptography] passlib[bcrypt] python-multipart python-dotenv httpx)"
+    ]
+  }
+}
