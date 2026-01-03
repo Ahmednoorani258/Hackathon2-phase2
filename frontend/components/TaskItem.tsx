@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { updateTask, deleteTask, Task } from '@/lib/api';
 import useApi from '@/lib/useApi';
 import { taskUpdateQueue } from '@/lib/requestQueue';
+import { PriorityBadge } from './PriorityBadge';
+import { TaskTags } from './TaskTags';
 
 interface TaskItemProps {
   task: Task;
@@ -128,20 +130,20 @@ export default function TaskItem({ task, onTaskUpdated, onTaskDeleted }: TaskIte
         </div>
       )}
 
-      <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-white hover:bg-gray-50 transition-colors">
-        <div className="flex items-center space-x-3 flex-1">
+      <div className="flex items-center justify-between p-6 bg-white rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+        <div className="flex items-center gap-4 flex-1">
           <button
             onClick={handleToggleCompletion}
             disabled={isUpdating}
-            className={`w-5 h-5 flex items-center justify-center border rounded transition-colors ${
+            className={`flex-shrink-0 w-11 h-11 rounded-lg border-2 flex items-center justify-center transition-colors duration-200 ${
               isCompleted
-                ? 'bg-green-500 border-green-500 text-white'
-                : 'border-gray-300 hover:border-green-400'
+                ? 'bg-primary-500 border-primary-500'
+                : 'border-gray-300 hover:border-primary-400'
             } ${isUpdating ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             aria-label={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
           >
             {isCompleted && (
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
             )}
@@ -155,43 +157,58 @@ export default function TaskItem({ task, onTaskUpdated, onTaskDeleted }: TaskIte
               onKeyDown={handleKeyDown}
               onBlur={handleEditCancel}
               autoFocus
-              className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
               aria-label="Edit task title"
             />
           ) : (
-            <span
-              className={`flex-1 ${isCompleted ? 'line-through text-gray-500' : 'text-gray-800'}`}
-              onClick={handleEditStart}
-            >
-              {task.title}
-            </span>
+            <div className="flex-1 flex flex-col gap-2 min-w-0">
+              <div className="flex items-start gap-3">
+                <h3
+                  className={`flex-1 text-lg font-medium leading-snug cursor-pointer ${
+                    isCompleted ? 'line-through text-gray-500' : 'text-gray-900'
+                  }`}
+                  onClick={handleEditStart}
+                >
+                  {task.title}
+                </h3>
+                <PriorityBadge priority={task.priority} />
+              </div>
+              {task.tags && task.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  <TaskTags tags={task.tags} />
+                </div>
+              )}
+              <p className="text-sm text-gray-500">
+                Created {new Date(task.created_at).toLocaleDateString()}
+              </p>
+            </div>
           )}
         </div>
 
-        <div className="flex space-x-2">
+        <div className="flex gap-2">
           {isEditing ? (
             <>
               <button
                 onClick={handleEditSave}
                 disabled={isUpdating}
-                className={`px-3 py-1 bg-green-500 text-white rounded transition-colors ${
-                  isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
+                className={`w-11 h-11 flex items-center justify-center bg-success-500 text-white rounded-lg transition-colors duration-200 ${
+                  isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-success-600'
                 }`}
                 aria-label="Save changes"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                 </svg>
               </button>
               <button
                 onClick={handleEditCancel}
                 disabled={isUpdating}
-                className={`px-3 py-1 bg-gray-300 text-gray-700 rounded transition-colors ${
+                className={`w-11 h-11 flex items-center justify-center bg-gray-300 text-gray-700 rounded-lg transition-colors duration-200 ${
                   isUpdating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'
                 }`}
                 aria-label="Cancel edit"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -200,8 +217,8 @@ export default function TaskItem({ task, onTaskUpdated, onTaskDeleted }: TaskIte
             <button
               onClick={() => !isUpdating && setShowDeleteConfirm(true)}
               disabled={isUpdating}
-              className={`p-1 transition-colors ${
-                isUpdating ? 'opacity-50 cursor-not-allowed text-gray-400' : 'text-red-500 hover:text-red-600'
+              className={`flex-shrink-0 w-11 h-11 rounded-lg flex items-center justify-center text-gray-400 hover:text-error-600 hover:bg-error-50 transition-colors duration-200 ${
+                isUpdating ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               aria-label="Delete task"
             >
@@ -216,22 +233,22 @@ export default function TaskItem({ task, onTaskUpdated, onTaskDeleted }: TaskIte
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full mx-4">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Confirm Delete</h3>
-              <p className="text-gray-600 mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Confirm Delete</h3>
+              <p className="text-gray-600 mb-6">
                 Are you sure you want to delete this task? This action cannot be undone.
               </p>
-              <div className="flex justify-end space-x-3">
+              <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={deleteApi.loading}
-                  className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200 disabled:opacity-50 min-h-[44px]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={deleteApi.loading}
-                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50"
+                  className="px-6 py-2.5 bg-error-500 text-white rounded-lg hover:bg-error-600 transition-colors duration-200 disabled:opacity-50 min-h-[44px]"
                 >
                   {deleteApi.loading ? 'Deleting...' : 'Delete'}
                 </button>

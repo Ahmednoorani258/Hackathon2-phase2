@@ -5,6 +5,8 @@ interface Task {
   id: number;
   title: string;
   is_completed: boolean;
+  priority: "high" | "medium" | "low";
+  tags?: string[];
   user_id: string;
   created_at: string;
   updated_at: string;
@@ -52,14 +54,29 @@ export async function apiRequest<T>(endpoint: string, options: RequestInit = {})
 }
 
 // Individual API functions
-export async function getTasks(): Promise<Task[]> {
-  return apiRequest<Task[]>('/api/tasks');
+export async function getTasks(
+  search?: string,
+  status?: string,
+  priority?: string,
+  datePreset?: string,
+  sortBy?: string,
+  sortOrder?: string
+): Promise<Task[]> {
+  const params = new URLSearchParams();
+  if (search) params.append('search', search);
+  if (status && status !== 'all') params.append('status', status);
+  if (priority && priority !== 'all') params.append('priority', priority);
+  if (datePreset && datePreset !== 'all') params.append('date_preset', datePreset);
+  if (sortBy) params.append('sort_by', sortBy);
+  if (sortOrder) params.append('sort_order', sortOrder);
+  const queryString = params.toString() ? `?${params.toString()}` : '';
+  return apiRequest<Task[]>(`/api/tasks${queryString}`);
 }
 
-export async function createTask(title: string): Promise<Task> {
+export async function createTask(title: string, priority: "high" | "medium" | "low" = "medium"): Promise<Task> {
   return apiRequest<Task>('/api/tasks', {
     method: 'POST',
-    body: JSON.stringify({ title }),
+    body: JSON.stringify({ title, priority }),
   });
 }
 
