@@ -99,16 +99,23 @@ export async function signUp(
  */
 export async function signOut(): Promise<void> {
   try {
-    // Clear token from localStorage
+    // Call the backend sign-out endpoint
+    const response = await fetch('/api/auth/sign-out', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      console.error('Sign out failed:', response.status);
+    }
+  } catch (error) {
+    console.error('Sign out error:', error);
+  } finally {
+    // Always clear token from localStorage, even if the backend call fails
     if (typeof window !== 'undefined') {
       localStorage.removeItem('auth_token');
     }
-    await fetch('/api/auth/sign-out', {
-      method: 'POST',
-      credentials: 'include',
-    });
-  } catch {
-    // Ignore errors
   }
 }
 

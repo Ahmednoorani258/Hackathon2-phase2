@@ -86,8 +86,9 @@ async def health_check(request: Request):
     return {"status": "healthy"}
 
 # Include API routes
-from routes import tasks
+from routes import tasks, tags
 from routes.auth import router as auth_router
 
 app.include_router(auth_router)
 app.include_router(tasks.router, dependencies=[Depends(get_current_user)])  # Apply JWT auth to all task routes
+app.include_router(tags.router, dependencies=[Depends(get_current_user)])  # Apply JWT auth to all tag routes

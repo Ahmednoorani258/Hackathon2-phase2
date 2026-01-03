@@ -37,7 +37,17 @@
       "Skill(api-contract-enforcement)",
       "Bash(pip install passlib[bcrypt] python-jose[dotenv] sqlmodel uvicorn httpx)",
       "Bash(PYTHONPATH=. python .claude/skills/api-contract-enforcement/scripts/validate_api_contract.py specs/006-foundation-spec/contracts/openapi.yaml backend.main)",
-      "Bash(pip install fastapi uvicorn sqlmodel python-jose[cryptography] passlib[bcrypt] python-multipart python-dotenv httpx)"
+      "Bash(pip install fastapi uvicorn sqlmodel python-jose[cryptography] passlib[bcrypt] python-multipart python-dotenv httpx)",
+      "Bash(.specify/scripts/powershell/create-new-feature.ps1 -Json \"Create a new Phase II Intermediate specification for the full-stack Todo application that defines organization and usability features including task priorities \\(high/medium/low\\), tags or categories, keyword search, filtering by status, priority, and date, and task sorting by due date, priority, or alphabetical order, while remaining fully compatible with the existing Basic-level implementation.\" --json --number 7 --short-name \"task-organization\" \"Create a new Phase II Intermediate specification for the full-stack Todo application that defines organization and usability features including task priorities \\(high/medium/low\\), tags or categories, keyword search, filtering by status, priority, and date, and task sorting by due date, priority, or alphabetical order, while remaining fully compatible with the existing Basic-level implementation.\")",
+      "Bash(mkdir -p specs/007-task-organization)",
+      "Bash(bash:*)",
+      "Bash(findstr:*)",
+      "Bash(.specify/scripts/powershell/create-new-feature.ps1 -Json \"Improve the frontend with eye-catching and sleek modern design. Make it responsive across all devices and implement a light theme.\" -Number 8 -ShortName \"modern-ui-design\")",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly)",
+      "Bash(cmd /c \"dir /b E:\\\\CODING\\\\Hackathon2-Phase2\\\\history\\\\prompts\\\\modern-ui-design 2>nul | find /c /v \"\"\")"
     ]
   }
 }

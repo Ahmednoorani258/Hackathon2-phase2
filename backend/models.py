@@ -29,12 +29,49 @@ class Task(SQLModel, table=True):
     user_id: str = Field(foreign_key="user.id", index=True)  # Enforces user isolation
     title: str = Field(max_length=255, default="Untitled Task")
     is_completed: bool = Field(default=False)
+    priority: str = Field(default="medium")  # Task priority: high, medium, low
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Relationship to user
     user: Optional[User] = Relationship(back_populates="tasks")
 
+    # Relationship to tag assignments (many-to-many through TaskTagAssignment)
+    tag_assignments: List["TaskTagAssignment"] = Relationship(back_populates="task", cascade_delete=True)
+
     def update_timestamp(self):
         """Update the updated_at timestamp"""
         self.updated_at = datetime.utcnow()
+
+
+class TaskTag(SQLModel, table=True):
+    """
+    Tag model for categorizing tasks.
+    Each tag is scoped to a user - users have their own tag namespace.
+    Tags are automatically deleted when no tasks reference them (via database trigger).
+    """
+    __tablename__ = "task_tags"
+
+    id: int = Field(default=None, primary_key=True)
+    user_id: str = Field(foreign_key="user.id", index=True)  # User isolation
+    name: str = Field(max_length=50)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    # Relationship to tag assignments (many-to-many through TaskTagAssignment)
+    tag_assignments: List["TaskTagAssignment"] = Relationship(back_populates="tag", cascade_delete=True)
+
+
+class TaskTagAssignment(SQLModel, table=True):
+    """
+    Junction table for many-to-many relationship between Tasks and TaskTags.
+    Allows a task to have multiple tags and a tag to be assigned to multiple tasks.
+    """
+    __tablename__ = "task_tag_assignments"
+
+    task_id: int = Field(foreign_key="task.id", primary_key=True)
+    tag_id: int = Field(foreign_key="task_tags.id", primary_key=True)
+    assigned_at: datetime = Field(default_factory=datetime.utcnow)
+
+    # Relationships
+    task: Optional[Task] = Relationship(back_populates="tag_assignments")
+    tag: Optional[TaskTag] = Relationship(back_populates="tag_assignments")
