@@ -35,30 +35,28 @@ export interface UseSessionReturn {
 /**
  * Sign in with email and password
  */
+/**
+ * Sign in with email and password
+ */
 export async function signIn(email: string, password: string): Promise<Session | null> {
-  try {
-    const response = await fetch('/api/auth/sign-in', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-      credentials: 'include',
-    });
+  const response = await fetch('/api/auth/sign-in', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+    credentials: 'include',
+  });
 
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({ detail: 'Sign in failed' }));
-      throw new Error(data.detail || 'Sign in failed');
-    }
-
-    const data = await response.json();
-    // Store token in localStorage
-    if (data.token && typeof window !== 'undefined') {
-      localStorage.setItem('auth_token', data.token);
-    }
-    return data;
-  } catch (error) {
-    console.error('Sign in error:', error);
-    return null;
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({ detail: 'Sign in failed' }));
+    throw new Error(data.detail || 'Sign in failed');
   }
+
+  const data = await response.json();
+  // Store token in localStorage
+  if (data.token && typeof window !== 'undefined') {
+    localStorage.setItem('auth_token', data.token);
+  }
+  return data;
 }
 
 /**
@@ -69,29 +67,24 @@ export async function signUp(
   password: string,
   name: string
 ): Promise<Session | null> {
-  try {
-    const response = await fetch('/api/auth/sign-up', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name }),
-      credentials: 'include',
-    });
+  const response = await fetch('/api/auth/sign-up', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, name }),
+    credentials: 'include',
+  });
 
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({ detail: 'Sign up failed' }));
-      throw new Error(data.detail || 'Sign up failed');
-    }
-
-    const data = await response.json();
-    // Store token in localStorage
-    if (data.token && typeof window !== 'undefined') {
-      localStorage.setItem('auth_token', data.token);
-    }
-    return data;
-  } catch (error) {
-    console.error('Sign up error:', error);
-    return null;
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({ detail: 'Sign up failed' }));
+    throw new Error(data.detail || 'Sign up failed');
   }
+
+  const data = await response.json();
+  // Store token in localStorage
+  if (data.token && typeof window !== 'undefined') {
+    localStorage.setItem('auth_token', data.token);
+  }
+  return data;
 }
 
 /**
